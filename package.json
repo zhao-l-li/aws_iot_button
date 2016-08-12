@@ -1,0 +1,15 @@
+{
+  "name": "aws-iot-button",
+  "version": "0.0.1",
+  "description": "Small description for aws-iot-button goes here",
+  "private": true,
+  "repository": "",
+  "engines": {
+    "node": ">= 4.4"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.5.0"
+  }
+}
