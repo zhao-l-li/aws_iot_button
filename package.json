@@ -10,7 +10,6 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "aws-sdk": "^2.5.0",
-    "lambda-local": "^0.0.10",
+    "aws-sdk": "^2.5.0"
   }
 }
