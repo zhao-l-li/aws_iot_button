@@ -1,0 +1,9 @@
+version: '2'
+services:
+  lambda:
+    extends:
+      file: docker/docker-compose.common.yml
+      service: lambda
+    volumes:
+      - .:/usr/src/app/
+

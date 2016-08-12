@@ -1,0 +1,7 @@
+version: '2'
+services:
+  lambda:
+    build: ..
+    env_file:
+      - development.env
+
