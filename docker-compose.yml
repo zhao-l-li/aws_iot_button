@@ -5,5 +5,5 @@ services:
       file: docker/docker-compose.common.yml
       service: lambda
     volumes:
-      - .:/usr/src/app/
+      - ./index.js:/usr/src/app/index.js
 
