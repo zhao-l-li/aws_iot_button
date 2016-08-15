@@ -7,7 +7,7 @@
  * 1. Update with IFTTT maker key
  * 2. Update with IFTTT maker event
  */
- 
+
 /**
  * The following JSON template shows what is sent as the payload:
 {
@@ -22,7 +22,9 @@
  * For more documentation, follow the link below.
  * http://docs.aws.amazon.com/iot/latest/developerguide/iot-lambda-rule.html
  */
+
 exports.handler = (event, context, callback) => {
+
   var https    = require('https'),
       url      = require('url'),
       endpoint = url.parse(
@@ -30,16 +32,25 @@ exports.handler = (event, context, callback) => {
       ); // update my_event and my_key
 
   console.log('Received event:', event.clickType);
-  console.log('start request to ' + endpoint.href);
+  var data = {
+    'value1': event.clickType,
+    'value2': event.serialNumber,
+    'value3': event.batteryVoltage,
+  };
 
-  var jsonObject = JSON.stringify(event);
   var options = {
     host: endpoint.host,
     port: endpoint.port,
     path: endpoint.path,
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(JSON.stringify(data)),
+    }
   };
 
+  console.log('start request to ' + endpoint.href);
+  console.log('with payload:' + JSON.stringify(data));
   var post = https.request(options, function(res) {
     console.log("Got response: " + res.statusCode);
     context.succeed();
@@ -48,9 +59,8 @@ exports.handler = (event, context, callback) => {
     context.done(null, 'FAILURE');
   });
 
-  post.write(jsonObject);
+  post.write(JSON.stringify(data));
   post.end();
 
   console.log('end request to ' + endpoint.href);
 };
-
