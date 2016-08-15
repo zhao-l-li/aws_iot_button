@@ -35,7 +35,7 @@ exports.handler = (event, context, callback) => {
   var jsonObject = JSON.stringify(event);
   var options = {
     host: endpoint.host,
-    port: 443,
+    port: endpoint.port,
     path: endpoint.path,
     method: 'POST',
   };
