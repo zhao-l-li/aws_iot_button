@@ -6,6 +6,8 @@
  *
  * 1. Update with IFTTT maker key
  * 2. Update with IFTTT maker event
+ * 2. Update with sonos server host
+ * 2. Update with sonos server path
  */
 
 /**
@@ -25,7 +27,8 @@
 
 exports.handler = (event, context, callback) => {
 
-  var https    = require('https'),
+  var http     = require('http'),
+      https    = require('https'),
       url      = require('url'),
       endpoint = url.parse(
         'https://maker.ifttt.com/trigger/my_event/with/key/my_key'
@@ -51,7 +54,15 @@ exports.handler = (event, context, callback) => {
 
   console.log('start request to ' + endpoint.href);
   console.log('with payload:' + JSON.stringify(data));
-  var post = https.request(options, function(res) {
+
+  var get = http.get({
+    host: 'my_host', // sonos server host
+    path: 'my_path'  // sonos server path
+  }, function(response) {
+    console.log("done presetting: " + response.message);      
+  });
+
+  var post = http.request(options, function(res) {
     console.log("Got response: " + res.statusCode);
     context.succeed();
   }).on('error', function(e) {
@@ -64,3 +75,4 @@ exports.handler = (event, context, callback) => {
 
   console.log('end request to ' + endpoint.href);
 };
+
