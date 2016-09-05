@@ -16,9 +16,16 @@ var http  = require('http'),
 
 /* play_welcome_message sets the volume and then plays a message
  */
-play_welcome_message = (data) => {
+play_welcome_message = (event) => {
+  var data = {
+    'value1': event.clickType,
+    'value2': event.serialNumber,
+    'value3': event.batteryVoltage,
+  };
+
   var endpoint = url.parse(
-    'https://maker.ifttt.com/trigger/my_event/with/key/my_key'
+    //'https://maker.ifttt.com/trigger/my_event/with/key/my_key'
+    'https://maker.ifttt.com/trigger/aws_iot_button_pressed/with/key/bi7x1TbM-QIi2a3P7IriBp'
   ); // update my_event and my_key
 
   var options = {
@@ -36,8 +43,10 @@ play_welcome_message = (data) => {
   console.log('with payload:' + JSON.stringify(data));
 
   var get = http.get({
-    host: 'my_host', // sonos server host
-    path: 'my_path'  // sonos server path
+    //host: 'my_host', // sonos server host
+    host: 'zhaoli.ddns.net',
+    //path: 'my_path'  // sonos server path
+    path: '/preset/all'
   }, function(response) {
     console.log("done presetting: " + response.message);      
   });
@@ -73,12 +82,13 @@ play_welcome_message = (data) => {
 
 exports.handler = (event, context, callback) => {
   console.log('Received event:', event.clickType);
-  var data = {
-    'value1': event.clickType,
-    'value2': event.serialNumber,
-    'value3': event.batteryVoltage,
-  };
 
-  play_welcome_message(data);
+  if(event.clickType === "SINGLE") {
+    play_welcome_message(event);
+  } else if(event.clickType === "DOUBLE") {
+  } else if(event.clickType === "LONG") {
+  } else {
+    console.log('unrecognized click type');
+  }
 };
 
