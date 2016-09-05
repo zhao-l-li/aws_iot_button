@@ -13,11 +13,11 @@ var http      = require('http'),
     https     = require('https'),
     url       = require('url'),
     host      = 'my.host', // update
-    ifttt_key = '$3cReT_k3y', // update
+    ifttt_key = '$3cReT_k3y'; // update
 
 /* play_welcome_message sets the volume and then plays a message
  */
-play_welcome_message = (event) => {
+play_welcome_message = (event, context) => {
   var data = {
     'value1': event.clickType,
     'value2': event.serialNumber,
@@ -94,7 +94,7 @@ exports.handler = (event, context, callback) => {
   console.log('Received event:', event.clickType);
 
   if(event.clickType === "SINGLE") {
-    play_welcome_message(event);
+    play_welcome_message(event, context);
   } else if(event.clickType === "DOUBLE") {
     give_status();
   } else if(event.clickType === "LONG") {
