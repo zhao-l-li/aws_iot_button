@@ -24,9 +24,8 @@ play_welcome_message = (event) => {
   };
 
   var endpoint = url.parse(
-    //'https://maker.ifttt.com/trigger/my_event/with/key/my_key'
-    'https://maker.ifttt.com/trigger/aws_iot_button_pressed/with/key/bi7x1TbM-QIi2a3P7IriBp'
-  ); // update my_event and my_key
+    'https://maker.ifttt.com/trigger/aws_iot_button_pressed/with/key/' + ifttt_key
+  );
 
   var options = {
     host: endpoint.host,
@@ -43,9 +42,7 @@ play_welcome_message = (event) => {
   console.log('with payload:' + JSON.stringify(data));
 
   var get = http.get({
-    //host: 'my_host', // sonos server host
-    host: 'zhaoli.ddns.net',
-    //path: 'my_path'  // sonos server path
+    host: host,
     path: '/preset/all'
   }, function(response) {
     console.log("done presetting: " + response.message);      
@@ -63,6 +60,18 @@ play_welcome_message = (event) => {
   post.end();
 
   console.log('end request to ' + endpoint.href);
+}
+
+/* give_status gives the current status
+ */
+give_status = () => {
+  var message = 'hi cheeks have a great day today'
+  var get = http.get({
+    host: host,
+    path: '/sayall/' + encodeURIComponent(message)
+  }, function(response) {
+    console.log("done giving status:" + response.message);      
+  });
 }
 
 /**
@@ -86,7 +95,9 @@ exports.handler = (event, context, callback) => {
   if(event.clickType === "SINGLE") {
     play_welcome_message(event);
   } else if(event.clickType === "DOUBLE") {
+    give_status();
   } else if(event.clickType === "LONG") {
+    console.log('long click action has not yet been defined');
   } else {
     console.log('unrecognized click type');
   }
