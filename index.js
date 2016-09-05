@@ -6,9 +6,74 @@
  *
  * 1. Update with IFTTT maker key
  * 2. Update with IFTTT maker event
- * 2. Update with sonos server host
- * 2. Update with sonos server path
+ * 3. Update with sonos server host
  */
+
+var http      = require('http'),
+    https     = require('https'),
+    url       = require('url'),
+    host      = 'my.host', // update
+    ifttt_key = '$3cReT_k3y', // update
+
+/* play_welcome_message sets the volume and then plays a message
+ */
+play_welcome_message = (event) => {
+  var data = {
+    'value1': event.clickType,
+    'value2': event.serialNumber,
+    'value3': event.batteryVoltage,
+  };
+
+  var endpoint = url.parse(
+    'https://maker.ifttt.com/trigger/aws_iot_button_pressed/with/key/' + ifttt_key
+  );
+
+  var options = {
+    host: endpoint.host,
+    port: endpoint.port,
+    path: endpoint.path,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(JSON.stringify(data)),
+    }
+  };
+
+  console.log('start request to ' + endpoint.href);
+  console.log('with payload:' + JSON.stringify(data));
+
+  var get = http.get({
+    host: host,
+    path: '/preset/all'
+  }, function(response) {
+    console.log("done presetting: " + response.message);      
+  });
+
+  var post = http.request(options, function(res) {
+    console.log("Got response: " + res.statusCode);
+    context.succeed();
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+    context.done(null, 'FAILURE');
+  });
+
+  post.write(JSON.stringify(data));
+  post.end();
+
+  console.log('end request to ' + endpoint.href);
+}
+
+/* give_status gives the current status
+ */
+give_status = () => {
+  var message = 'hi cheeks have a great day today'
+  var get = http.get({
+    host: host,
+    path: '/sayall/' + encodeURIComponent(message)
+  }, function(response) {
+    console.log("done giving status:" + response.message);      
+  });
+}
 
 /**
  * The following JSON template shows what is sent as the payload:
@@ -26,53 +91,16 @@
  */
 
 exports.handler = (event, context, callback) => {
-
-  var http     = require('http'),
-      https    = require('https'),
-      url      = require('url'),
-      endpoint = url.parse(
-        'https://maker.ifttt.com/trigger/my_event/with/key/my_key'
-      ); // update my_event and my_key
-
   console.log('Received event:', event.clickType);
-  var data = {
-    'value1': event.clickType,
-    'value2': event.serialNumber,
-    'value3': event.batteryVoltage,
-  };
 
-  var options = {
-    host: endpoint.host,
-    port: endpoint.port,
-    path: endpoint.path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(JSON.stringify(data)),
-    }
-  };
-
-  console.log('start request to ' + endpoint.href);
-  console.log('with payload:' + JSON.stringify(data));
-
-  var get = http.get({
-    host: 'my_host', // sonos server host
-    path: 'my_path'  // sonos server path
-  }, function(response) {
-    console.log("done presetting: " + response.message);      
-  });
-
-  var post = http.request(options, function(res) {
-    console.log("Got response: " + res.statusCode);
-    context.succeed();
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-    context.done(null, 'FAILURE');
-  });
-
-  post.write(JSON.stringify(data));
-  post.end();
-
-  console.log('end request to ' + endpoint.href);
+  if(event.clickType === "SINGLE") {
+    play_welcome_message(event);
+  } else if(event.clickType === "DOUBLE") {
+    give_status();
+  } else if(event.clickType === "LONG") {
+    console.log('long click action has not yet been defined');
+  } else {
+    console.log('unrecognized click type');
+  }
 };
 
