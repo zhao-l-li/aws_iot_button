@@ -6,13 +6,14 @@
  *
  * 1. Update with IFTTT maker key
  * 2. Update with IFTTT maker event
- * 2. Update with sonos server host
- * 2. Update with sonos server path
+ * 3. Update with sonos server host
  */
 
-var http  = require('http'),
-    https = require('https'),
-    url   = require('url');
+var http      = require('http'),
+    https     = require('https'),
+    url       = require('url'),
+    host      = 'my.host', // update
+    ifttt_key = '$3cReT_k3y', // update
 
 /* play_welcome_message sets the volume and then plays a message
  */
