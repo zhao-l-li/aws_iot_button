@@ -66,12 +66,23 @@ play_welcome_message = (event, context) => {
 /* give_status gives the current status
  */
 give_status = () => {
-  var message = 'hi cheeks have a great day today'
+  var message = 'hello money managers of the li li and li fund'
   var get = http.get({
     host: host,
     path: '/sayall/' + encodeURIComponent(message)
   }, function(response) {
     console.log("done giving status:" + response.message);      
+  });
+}
+
+/* play_love_amy plays a special message for Amy
+ */
+play_love_amy = () => {
+  var get = http.get({
+    host: host,
+    path: '/living%20room/favorite/love_amy.m4a'
+  }, function(response) {
+    console.log("done love amy:" + response.message);      
   });
 }
 
@@ -98,7 +109,7 @@ exports.handler = (event, context, callback) => {
   } else if(event.clickType === "DOUBLE") {
     give_status();
   } else if(event.clickType === "LONG") {
-    console.log('long click action has not yet been defined');
+    play_love_amy();
   } else {
     console.log('unrecognized click type');
   }
