@@ -75,6 +75,17 @@ give_status = () => {
   });
 }
 
+/* live_in_love plays LiveInLove playlist
+ */
+live_in_love = () => {
+  var get = http.get({
+    host: host,
+    path: '/living%20room/playlist/LiveInLove'
+  }, function(response) {
+    console.log("done living in love:" + response.message);      
+  });
+}
+
 /* play_love_amy plays a special message for Amy
  */
 play_love_amy = () => {
@@ -107,7 +118,8 @@ exports.handler = (event, context, callback) => {
   if(event.clickType === "SINGLE") {
     play_welcome_message(event, context);
   } else if(event.clickType === "DOUBLE") {
-    give_status();
+    //give_status();
+    live_in_love();
   } else if(event.clickType === "LONG") {
     play_love_amy();
   } else {
