@@ -97,6 +97,17 @@ play_love_amy = () => {
   });
 }
 
+/* play_love_daddy plays a special message for Daddy
+ */
+play_love_daddy = () => {
+  var get = http.get({
+    host: host,
+    path: '/living%20room/favorite/daddy-oh.m4a'
+  }, function(response) {
+    console.log("done love daddy:" + response.message);      
+  });
+}
+
 /**
  * The following JSON template shows what is sent as the payload:
 {
@@ -118,12 +129,10 @@ exports.handler = (event, context, callback) => {
   if(event.clickType === "SINGLE") {
     play_welcome_message(event, context);
   } else if(event.clickType === "DOUBLE") {
-    //give_status();
-    live_in_love();
+    play_love_daddy();
   } else if(event.clickType === "LONG") {
     play_love_amy();
   } else {
     console.log('unrecognized click type');
   }
 };
-
