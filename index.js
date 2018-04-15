@@ -14,6 +14,7 @@ var http      = require('http'),
     url       = require('url'),
     host      = 'my.host', // update
     ifttt_key = '$3cReT_k3y'; // update
+    iftttBase = 'https://maker.ifttt.com/trigger/',
 
 /* play_welcome_message sets the volume and then plays a message
  */
@@ -108,6 +109,51 @@ play_love_daddy = () => {
   });
 }
 
+/* toggle_bedroom_light toggles bedroom light on/off
+ */
+toggle_bedroom_light = () => {
+  var iftttUrl = iftttBase + 'toggle_bedroom_light/with/key/' + ifttt_key;
+
+  https.get(encodeURI(iftttUrl), function(res) {
+    console.log("Got response: " + res.statusCode);
+    res.on('data', function(d) {
+      console.log('Body: ' + d);
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+}
+
+/* toggle_livingroom_light toggles living room light on/off
+ */
+toggle_livingroom_light = () => {
+  var iftttUrl = iftttBase + 'toggle_livingroom_light/with/key/' + ifttt_key;
+
+  https.get(encodeURI(iftttUrl), function(res) {
+    console.log("Got response: " + res.statusCode);
+    res.on('data', function(d) {
+      console.log('Body: ' + d);
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+}
+
+/* toggle_bedroom_ac toggles bedroom ac on/off
+ */
+toggle_bedroom_ac = () => {
+  var iftttUrl = iftttBase + 'toggle_bedroom_ac/with/key/' + ifttt_key;
+
+  https.get(encodeURI(iftttUrl), function(res) {
+    console.log("Got response: " + res.statusCode);
+    res.on('data', function(d) {
+      console.log('Body: ' + d);
+    });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
+  });
+}
+
 /**
  * The following JSON template shows what is sent as the payload:
 {
@@ -122,16 +168,18 @@ play_love_daddy = () => {
  * For more documentation, follow the link below.
  * http://docs.aws.amazon.com/iot/latest/developerguide/iot-lambda-rule.html
  */
-
 exports.handler = (event, context, callback) => {
   console.log('Received event:', event.clickType);
 
   if(event.clickType === "SINGLE") {
-    play_welcome_message(event, context);
+    //play_welcome_message(event, context);
+    toggle_bedroom_light();
   } else if(event.clickType === "DOUBLE") {
-    play_love_daddy();
+    //play_love_daddy();
+    toggle_bedroom_ac();
   } else if(event.clickType === "LONG") {
-    play_love_amy();
+    //play_love_amy();
+    toggle_livingroom_light();
   } else {
     console.log('unrecognized click type');
   }
